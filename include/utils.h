@@ -8,6 +8,5 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 #define foreach(x, xs) \
-    for(; \
-        x = scm_is_pair(xs) ? scm_car(xs) : SCM_UNDEFINED, scm_is_pair(xs); \
+    for(; x = scm_is_pair(xs) ? scm_car(xs) : SCM_UNDEFINED, scm_is_pair(xs); \
         xs = scm_cdr(xs))
