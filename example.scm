@@ -1,5 +1,5 @@
 (define >~ transform)
-(define &  group)
+(define &  list)
 (define >+ combine)
 
 (define (>* n . body)

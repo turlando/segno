@@ -5,7 +5,7 @@
 #include <utils.h>
 #include <window.h>
 #include <shader.h>
-#include <shapes.h>
+#include <shape.h>
 #include <segno.h> // global_window...
 
 static void glfw_init() {
@@ -58,6 +58,29 @@ static void key_callback(GLFWwindow *window,
     }
 }
 
+void draw(struct shape shape, struct shader_program shader) {
+    glUseProgram(shader.id);
+
+    // Cast to GLfloat array
+    GLfloat matrix[16];
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            matrix[i * 4 + j] = shape.matrix[i][j];
+        }
+    }
+
+    glUniformMatrix4fv(shader.uniform_matrix, 1, GL_FALSE, matrix);
+    glBindVertexArray(shape.vertex_array);
+
+    if (shape.fill)
+        glDrawArrays(GL_TRIANGLE_FAN, 0, shape.n);
+    else
+        glDrawArrays(GL_LINE_LOOP, 0, shape.n);
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+}
+
 void window_loop() {
     glfw_init();
     glfw_window_init();
@@ -93,7 +116,8 @@ void window_loop() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         SCM shape_scm = scm_c_eval_string("(get-root-shape)");
-        shape_draw(shape_scm, shader);
+        struct shape shape = scm_to_shape(shape_scm);
+        draw(shape, shader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

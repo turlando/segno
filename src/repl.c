@@ -31,7 +31,7 @@ void *repl_loop(void *a) {
 
     scm_init_guile();
     init_readline();
-    lang_bind_primitives();
+    lang_init();
     scm_shell(0, NULL);
 
     return NULL;
@@ -41,7 +41,7 @@ void *repl_server_loop(void *a) {
     struct repl_args *args = (struct repl_args *) a;
 
     scm_init_guile();
-    lang_bind_primitives();
+    lang_init();
     init_server(args->repl_server_port);
 
     return NULL;

@@ -40,10 +40,25 @@ SCM lang_transform(SCM shape_scm, SCM mutation_scm) {
     return new_shape_scm;
 }
 
-void lang_bind_primitives() {
+static void lang_bind_primitives() {
     scm_c_define_gsubr("polygon",     1, 0, 0, &lang_polygon);
     scm_c_define_gsubr("transform",   2, 0, 0, &lang_transform);
     scm_c_define_gsubr("combine",     0, 0, 1, &lang_combine);
     scm_c_define_gsubr("scale",       1, 0, 0, &lang_scale);
-    scm_c_primitive_load("init.scm");
+}
+
+static void lang_bind_draw() {
+    const char bind_draw[] =
+        "(use-modules (ice-9 threads))"
+        "(define root-shape '(polygon 4))"
+        "(define mutex      (make-mutex))"
+        "(define (get-root-shape) (with-mutex mutex (eval root-shape"
+        "                                        (interaction-environment))))"
+        "(define-macro (draw body) (with-mutex mutex (set! root-shape body)) #t)";
+    scm_c_eval_string(bind_draw);
+}
+
+void lang_init() {
+    lang_bind_primitives();
+    lang_bind_draw();
 }
