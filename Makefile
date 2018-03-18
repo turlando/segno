@@ -1,7 +1,7 @@
 NAME:=   segno
 SRCDIR:= src
 
-CFLAGS:=   -std=c99 -O2 -Wall -Wextra $(shell guile-config compile)
+CFLAGS:=   -std=c99 -g -Wall -Wextra $(shell guile-config compile)
 LDFLAGS:=  -lglfw -lGL -ldl -lm $(shell guile-config link)
 
 SRC:= $(wildcard $(SRCDIR)/*.c)
@@ -10,7 +10,7 @@ DEP:= $(OBJ:.o=.d)
 
 
 .PHONY: all
-all: $(NAME) run
+all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) \
@@ -24,10 +24,6 @@ $(SRCDIR)/%.o: $(SRCDIR)/%.c
 	-o $@ -c $<
 
 -include $(DEP)
-
-.PHONY: run
-run: $(NAME)
-	./$(NAME)
 
 .PHONY: clean
 clean:
