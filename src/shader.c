@@ -1,6 +1,10 @@
-#include <segno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/gl3w.h>
 
-GLuint compile_shader(GLenum type, const GLchar *source) {
+#include <shader.h>
+
+static GLuint compile(GLenum type, const GLchar *source) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
@@ -9,14 +13,14 @@ GLuint compile_shader(GLenum type, const GLchar *source) {
     if (!param) {
         GLchar log[4096];
         glGetShaderInfoLog(shader, sizeof(log), NULL, log);
-        fprintf(stderr, "error: %s: %s\n",
+        fprintf(stderr, "GL3W: %s: %s\n",
                 type == GL_FRAGMENT_SHADER ? "frag" : "vert", (char *) log);
         exit(EXIT_FAILURE);
     }
     return shader;
 }
 
-GLuint link_program(GLuint vert, GLuint frag) {
+static GLuint link(GLuint vert, GLuint frag) {
     GLuint program = glCreateProgram();
     glAttachShader(program, vert);
     glAttachShader(program, frag);
@@ -26,19 +30,20 @@ GLuint link_program(GLuint vert, GLuint frag) {
     if (!param) {
         GLchar log[4096];
         glGetProgramInfoLog(program, sizeof(log), NULL, log);
-        fprintf(stderr, "error: link: %s\n", (char *) log);
+        fprintf(stderr, "GL3W: link: %s\n", (char *) log);
         exit(EXIT_FAILURE);
     }
     return program;
 }
 
-Program program_new(const GLchar *vert_shader, const GLchar *frag_shader) {
-    Program program;
+struct shader_program shader_program_new(const GLchar *vert_shader,
+                                         const GLchar *frag_shader) {
+    struct shader_program program;
 
-    GLuint vert = compile_shader(GL_VERTEX_SHADER, vert_shader);
-    GLuint frag = compile_shader(GL_FRAGMENT_SHADER, frag_shader);
+    GLuint vert = compile(GL_VERTEX_SHADER, vert_shader);
+    GLuint frag = compile(GL_FRAGMENT_SHADER, frag_shader);
 
-    program.id = link_program(vert, frag);
+    program.id = link(vert, frag);
 
     glDeleteShader(frag);
     glDeleteShader(vert);
@@ -48,6 +53,6 @@ Program program_new(const GLchar *vert_shader, const GLchar *frag_shader) {
     return program;
 }
 
-void program_free(Program program) {
+void shader_program_free(struct shader_program program) {
     glDeleteProgram(program.id);
 }

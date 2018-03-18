@@ -1,5 +1,5 @@
 #include <segno.h>
-
+#include <shader.h>
 
 SCM scm_from_shape(Shape shape) {
     Shape *shape_heap;
@@ -84,7 +84,7 @@ SCM shape_fill(SCM shape_scm) {
     return scm_from_shape(shape);
 }
 
-void shape_draw(SCM shape_scm, Program program) {
+void shape_draw(SCM shape_scm, struct shader_program program) {
     if (scm_is_pair(shape_scm)) {
         SCM list = shape_scm;
 

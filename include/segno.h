@@ -62,8 +62,6 @@ SCM shape_transform(SCM shape, SCM transform);
 SCM shape_polygon(SCM n_scm, SCM changes);
 SCM shape_fill(SCM shape_scm);
 
-void shape_draw(SCM shape, Program program);
-
 // transformations.c
 SCM transform_apply(SCM shape, SCM transform);
 

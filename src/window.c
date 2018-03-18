@@ -3,8 +3,10 @@
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 
-#include <window.h>
 #include <utils.h>
+#include <window.h>
+#include <shader.h>
+#include <shapes.h>
 #include <segno.h>
 
 static void glfw_init() {
@@ -12,7 +14,6 @@ static void glfw_init() {
         fprintf(stderr, "GLFW3: initialization failed\n");
         exit(EXIT_FAILURE);
     }
-
 }
 
 static void gl3w_init() {
@@ -86,7 +87,7 @@ void window_loop() {
         "    color = vec4(0.9, 0.9, 0.9, 0);\n"
         "}\n";
 
-    Program shader = program_new(vert_shader, frag_shader);
+    struct shader_program shader = shader_program_new(vert_shader, frag_shader);
 
     while (glfwWindowShouldClose(window) != GLFW_TRUE) {
         glClearColor(0.1, 0.1, 0.1, 1);
@@ -99,6 +100,6 @@ void window_loop() {
         glfwPollEvents();
     }
 
-    program_free(shader);
+    shader_program_free(shader);
     glfwTerminate();
 }
