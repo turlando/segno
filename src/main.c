@@ -3,11 +3,15 @@
 
 void *guile_repl(void *v) {
     (void) v;
-    scm_init_guile();
 
+    scm_init_guile();
+    guile_bind_primitives();
     scm_c_eval_string("(use-modules (ice-9 readline))");
     scm_c_eval_string("(activate-readline)");
+    scm_c_primitive_load("init.scm");
+
     scm_shell(0, NULL);
+
     return NULL;
 }
 
@@ -28,14 +32,10 @@ void guile_bind_primitives() {
 int main() {
     scm_init_guile();
 
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, guile_repl, NULL);
-
-    guile_bind_primitives();
+    pthread_t repl_thread;
+    pthread_create(&repl_thread, NULL, guile_repl, NULL);
 
     Context context = gl_init();
-
-    scm_c_primitive_load("init.scm");
 
     gl_loop(context);
     gl_clean(context);
