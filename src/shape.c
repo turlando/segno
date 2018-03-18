@@ -59,7 +59,7 @@ struct shape shape_polygon(int n) {
 }
 
 struct shape shape_mutation_apply(struct shape shape, struct mutation mutation) {
-    struct shape new_shape;
+    struct shape new_shape = shape;
     mat4x4_mul(new_shape.matrix, mutation.matrix, shape.matrix);
     return new_shape;
 }
