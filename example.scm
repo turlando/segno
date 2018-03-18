@@ -1,3 +1,19 @@
+;; Working examples
+
+(draw
+  (transform
+    (polygon 6)
+    (scale 1/3)))
+
+(draw
+  (transform
+    (polygon 6)
+    (rotate 1/5)))
+
+
+;; Not currently working. Refactoring had its victims.
+;; The core functions are not handling lists properly
+;; anymore which is funny for a lisp language.
 (define >~ transform)
 (define &  list)
 (define >+ combine)
