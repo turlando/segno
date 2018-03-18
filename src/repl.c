@@ -44,6 +44,8 @@ static void init_lang() {
 }
 
 void *repl_loop(void *a) {
+    (void) a;
+
     scm_init_guile();
     init_readline();
     init_lang();

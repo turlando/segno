@@ -69,6 +69,7 @@ void window_loop() {
     glfwSwapInterval(1);  // vsync
     gl3w_init();
 
+    // FIXME: get rid of this
     global_window = window;
 
     const GLchar *vert_shader =
