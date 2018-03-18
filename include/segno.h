@@ -36,24 +36,6 @@ typedef struct {
 } Transform;
 
 
-typedef struct {
-    GLuint id;
-    GLuint uniform_matrix;
-} Program;
-
-
-typedef struct {
-    Program program;
-    GLFWwindow *window;
-} Context;
-
-
-// shaders.c
-Program program_new(const GLchar *vert_shader,
-                    const GLchar *frag_shader);
-void program_free(Program program);
-
-
 // shapes.c
 SCM scm_from_shape(Shape shape);
 Shape scm_to_shape(SCM shape_scm);
