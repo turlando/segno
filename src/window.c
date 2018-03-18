@@ -6,7 +6,6 @@
 #include <window.h>
 #include <shader.h>
 #include <shape.h>
-#include <segno.h> // global_window...
 
 static void glfw_init() {
     if (glfwInit() != GLFW_TRUE) {
@@ -91,9 +90,6 @@ void window_loop() {
     glfwSetKeyCallback(window, key_callback);
     glfwSwapInterval(1);  // vsync
     gl3w_init();
-
-    // FIXME: get rid of this
-    global_window = window;
 
     const GLchar *vert_shader =
         "#version 330\n"
