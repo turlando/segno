@@ -2,28 +2,15 @@
 #include <libguile.h>
 #include <segno.h>
 #include <shader.h>
+#include <shape.h>
 #include <shapes.h>
-
-SCM shape_to_scm(struct shape shape) {
-    size_t size = sizeof(struct shape);
-    struct shape *shape_in_heap = scm_gc_malloc_pointerless(size, "shape");
-
-    memcpy(shape_in_heap, &shape, size);
-    return scm_from_pointer(shape_in_heap, NULL);
-}
-
-struct shape scm_to_shape(SCM shape_scm) {
-    struct shape *shape_ref = scm_to_pointer(shape_scm);
-    struct shape shape = *shape_ref;
-    return shape;
-}
 
 SCM shape_transform(SCM shape, SCM transform) {
     // for now just one transformation
     return transform_apply(shape, transform_combine(transform));
 }
 
-SCM shape_polygon(SCM n_scm, SCM changes) {
+SCM shape_polygon_(SCM n_scm, SCM changes) {
     int n = scm_to_int(n_scm);
     // Points
     float array[2*n];
@@ -91,7 +78,6 @@ void shape_draw(SCM shape_scm, struct shader_program program) {
     if (scm_is_pair(shape_scm)) {
         SCM list = shape_scm;
 
-        SCM shape_scm;
         foreach(shape_scm, list) {
             shape_scm = first(list);
             shape_draw(shape_scm, program);

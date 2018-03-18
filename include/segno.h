@@ -28,7 +28,6 @@ typedef struct {
 
 // shapes.c
 SCM shape_transform(SCM shape, SCM transform);
-SCM shape_polygon(SCM n_scm, SCM changes);
 SCM shape_fill(SCM shape_scm);
 
 // transformations.c

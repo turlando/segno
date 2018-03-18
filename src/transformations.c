@@ -1,5 +1,5 @@
 #include <segno.h>
-#include <shapes.h>
+#include <shape.h>
 
 SCM scm_from_transform(Transform transform) {
     Transform *transform_heap;

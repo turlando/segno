@@ -4,6 +4,7 @@
 
 #include <repl.h>
 #include <segno.h>
+#include <lang.h>
 
 static void init_readline() {
     scm_c_eval_string("(use-modules (ice-9 readline))");
@@ -28,7 +29,7 @@ static void init_server(int port) {
 }
 
 static void init_lang() {
-    scm_c_define_gsubr("polygon",     1, 0, 1, &shape_polygon);
+    scm_c_define_gsubr("polygon",     1, 0, 0, &lang_polygon);
 
     scm_c_define_gsubr("scale",       0, 0, 1, &transform_scale);
     scm_c_define_gsubr("translate-x", 0, 0, 1, &transform_translate_x);
