@@ -22,24 +22,11 @@
 
 
 typedef struct {
-    int n;
-    GLuint vertex_buffer;
-    GLuint vertex_array;
-    mat4x4 matrix;
-
-    bool fill;
-} Shape;
-
-
-typedef struct {
     mat4x4 matrix;
 } Transform;
 
 
 // shapes.c
-SCM scm_from_shape(Shape shape);
-Shape scm_to_shape(SCM shape_scm);
-
 SCM shape_transform(SCM shape, SCM transform);
 SCM shape_polygon(SCM n_scm, SCM changes);
 SCM shape_fill(SCM shape_scm);

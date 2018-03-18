@@ -1,17 +1,20 @@
+#include <stdlib.h>
+#include <libguile.h>
 #include <segno.h>
 #include <shader.h>
+#include <shapes.h>
 
-SCM scm_from_shape(Shape shape) {
-    Shape *shape_heap;
-    shape_heap = scm_gc_malloc_pointerless(sizeof(Shape), "shape");
+SCM shape_to_scm(struct shape shape) {
+    size_t size = sizeof(struct shape);
+    struct shape *shape_in_heap = scm_gc_malloc_pointerless(size, "shape");
 
-    memcpy(shape_heap, &shape, sizeof(Shape));
-    return scm_from_pointer(shape_heap, NULL);
+    memcpy(shape_in_heap, &shape, size);
+    return scm_from_pointer(shape_in_heap, NULL);
 }
 
-Shape scm_to_shape(SCM shape_scm) {
-    Shape *shape_ref = scm_to_pointer(shape_scm);
-    Shape shape = *shape_ref;
+struct shape scm_to_shape(SCM shape_scm) {
+    struct shape *shape_ref = scm_to_pointer(shape_scm);
+    struct shape shape = *shape_ref;
     return shape;
 }
 
@@ -58,7 +61,7 @@ SCM shape_polygon(SCM n_scm, SCM changes) {
     //
 
     // Polygon
-    Shape shape;
+    struct shape shape;
     shape.n = n;
     shape.vertex_buffer = vbo_point;
     shape.vertex_array = vao_point;
@@ -67,7 +70,7 @@ SCM shape_polygon(SCM n_scm, SCM changes) {
 
     shape.fill = false;
 
-    SCM shape_scm = scm_from_shape(shape);
+    SCM shape_scm = shape_to_scm(shape);
     SCM change;
 
     foreach(change, changes) {
@@ -78,10 +81,10 @@ SCM shape_polygon(SCM n_scm, SCM changes) {
 }
 
 SCM shape_fill(SCM shape_scm) {
-    Shape shape = scm_to_shape(shape_scm);
+    struct shape shape = scm_to_shape(shape_scm);
     shape.fill = true;
 
-    return scm_from_shape(shape);
+    return shape_to_scm(shape);
 }
 
 void shape_draw(SCM shape_scm, struct shader_program program) {
@@ -97,7 +100,7 @@ void shape_draw(SCM shape_scm, struct shader_program program) {
         return;
     }
 
-    Shape shape = scm_to_shape(shape_scm);
+    struct shape shape = scm_to_shape(shape_scm);
 
     glUseProgram(program.id);
 

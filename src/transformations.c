@@ -1,4 +1,5 @@
 #include <segno.h>
+#include <shapes.h>
 
 SCM scm_from_transform(Transform transform) {
     Transform *transform_heap;
@@ -42,13 +43,13 @@ SCM transform_apply(SCM shape, SCM transform) {
         return out_shapes;
 
     } else {
-        Shape original, out;
+        struct shape original, out;
         out = original = scm_to_shape(shape);
 
         Transform transform_unpacked = scm_to_transform(transform);
 
         mat4x4_mul(out.matrix, transform_unpacked.matrix, original.matrix);
-        return scm_from_shape(out);
+        return shape_to_scm(out);
     }
 }
 
