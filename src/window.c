@@ -1,7 +1,23 @@
 #include <segno.h>
+#include <utils.h>
 
+static void gl_init() {
+    if (glfwInit() != GLFW_TRUE) {
+        fprintf(stderr, "GLFW3: initialization failed\n");
+        exit(EXIT_FAILURE);
+    }
+}
 
-GLFWwindow *window_new(int w, int h, const char *title) {
+static void gl_window_init() {
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+}
+
+static GLFWwindow *window_new(int w, int h, const char *title) {
     GLFWwindow *window = glfwCreateWindow(w, h, title, NULL, NULL);
     global_window = window;
 
@@ -17,19 +33,7 @@ GLFWwindow *window_new(int w, int h, const char *title) {
     return window;
 }
 
-Context gl_init() {
-    if (glfwInit() != GLFW_TRUE) {
-        fprintf(stderr, "GLFW3: initialization failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+static Program shader_new() {
     /* Shader sources */
     const GLchar *vert_shader =
         "#version 330\n"
@@ -45,22 +49,16 @@ Context gl_init() {
         "    color = vec4(0.9, 0.9, 0.9, 0);\n"
         "}\n";
 
-    Context context;
-    context.window = window_new(640, 640, "Segno");
-    context.program = program_new(vert_shader, frag_shader);
-
-    return context;
+    Program program = program_new(vert_shader, frag_shader);
+    return program;
 }
 
-void gl_clean(Context context) {
-    program_free(context.program);
+static void gl_clean(Program program) {
+    program_free(program);
     glfwTerminate();
 }
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
-void size_callback(GLFWwindow* window, int width, int height) {
+static void size_callback(GLFWwindow* window, int width, int height) {
     (void) window;
     int side = MAX(width, height);
     int x0 = (width - side) / 2;
@@ -78,18 +76,30 @@ static void key_callback(GLFWwindow *window,
     }
 }
 
-void gl_loop(Context context) {
-    glfwSetWindowSizeCallback(context.window, size_callback);
-    glfwSetKeyCallback(context.window, key_callback);
+static void gl_loop(GLFWwindow *window, Program shader) {
+    glfwSetWindowSizeCallback(window, size_callback);
+    glfwSetKeyCallback(window, key_callback);
 
-    while (!glfwWindowShouldClose(context.window)) {
+    while (!glfwWindowShouldClose(window)) {
         glClearColor(0.1, 0.1, 0.1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
         SCM shape_scm = scm_c_eval_string("(get-root-shape)");
-        shape_draw(shape_scm, context.program);
+        shape_draw(shape_scm, shader);
 
-        glfwSwapBuffers(context.window);
+        glfwSwapBuffers(window);
         glfwPollEvents();
     }
+}
+
+void window_loop() {
+    gl_init();
+    gl_window_init();
+
+    GLFWwindow *window = window_new(640, 640, "Segno");
+    Program shader = shader_new();
+
+    gl_loop(window, shader);
+
+    gl_clean(shader);
 }

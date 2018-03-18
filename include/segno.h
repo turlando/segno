@@ -51,12 +51,6 @@ typedef struct {
 } Context;
 
 
-// gl.c
-Context gl_init();
-void gl_loop(Context context);
-void gl_clean(Context context);
-
-
 // shaders.c
 Program program_new(const GLchar *vert_shader,
                     const GLchar *frag_shader);

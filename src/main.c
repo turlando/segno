@@ -1,5 +1,6 @@
 #include <segno.h>
 #include <repl.h>
+#include <window.h>
 
 int main() {
     scm_init_guile();
@@ -7,9 +8,7 @@ int main() {
     pthread_t repl_thread;
     pthread_create(&repl_thread, NULL, repl_loop, NULL);
 
-    Context context = gl_init();
+    window_loop();
 
-    gl_loop(context);
-    gl_clean(context);
     return 0;
 }
