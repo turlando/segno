@@ -49,6 +49,15 @@ static void resize_callback(GLFWwindow* window, int width, int height) {
     glViewport(x0, y0, side, side);
 }
 
+static void key_callback(GLFWwindow *window,
+                         int key, int scancode, int action, int mods) {
+    (void) scancode;
+    (void) mods;
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+}
+
 void window_loop() {
     glfw_init();
     glfw_window_init();
@@ -56,6 +65,7 @@ void window_loop() {
     GLFWwindow *window = window_new(640, 640, "Segno");
     glfwMakeContextCurrent(window);
     glfwSetWindowSizeCallback(window, resize_callback);
+    glfwSetKeyCallback(window, key_callback);
     glfwSwapInterval(1);  // vsync
     gl3w_init();
 
