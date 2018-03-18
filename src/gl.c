@@ -18,8 +18,8 @@ GLFWwindow *window_new(int w, int h, const char *title) {
 }
 
 Context gl_init() {
-    if (!glfwInit()) {
-        fprintf(stderr, "GLFW3: failed to initialize\n");
+    if (glfwInit() != GLFW_TRUE) {
+        fprintf(stderr, "GLFW3: initialization failed\n");
         exit(EXIT_FAILURE);
     }
 
