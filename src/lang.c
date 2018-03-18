@@ -76,13 +76,23 @@ static void lang_bind_draw() {
         "(use-modules (ice-9 threads))"
         "(define root-shape '(polygon 4))"
         "(define mutex      (make-mutex))"
-        "(define (get-root-shape) (with-mutex mutex (eval root-shape"
-        "                                        (interaction-environment))))"
+        "(define (get-root-shape) (with-mutex mutex"
+        "                          (eval root-shape"
+        "                           (interaction-environment))))"
         "(define-macro (draw body) (with-mutex mutex (set! root-shape body)) #t)";
     scm_c_eval_string(bind_draw);
+}
+
+static void lang_bind_nth() {
+    const char bind_nth[] =
+        "(use-modules (srfi srfi-1))"
+        "(define (nth n)  (map (lambda (x) (/ x n))"
+        "        (iota n)))";
+    scm_c_eval_string(bind_nth);
 }
 
 void lang_init() {
     lang_bind_primitives();
     lang_bind_draw();
+    lang_bind_nth();
 }
