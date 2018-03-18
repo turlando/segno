@@ -72,8 +72,6 @@ SCM shape_polygon(SCM n_scm, SCM changes);
 SCM shape_fill(SCM shape_scm);
 
 void shape_draw(SCM shape, Program program);
-void guile_bind_primitives();
-
 
 // transformations.c
 SCM transform_apply(SCM shape, SCM transform);
