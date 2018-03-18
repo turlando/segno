@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/gl3w.h>
-
 #include <shader.h>
 
 static GLuint compile(GLenum type, const GLchar *source) {

@@ -1,8 +1,10 @@
 #include <libguile.h>
 #include <shape.h>
+#include <mutation.h>
 #include <math.h>
 #include <utils.h>
 #include <GL/gl3w.h>
+#include <linmath.h>
 
 SCM shape_to_scm(struct shape shape) {
     size_t size = sizeof(struct shape);
@@ -54,4 +56,10 @@ struct shape shape_polygon(int n) {
     shape.fill = false;
 
     return shape;
+}
+
+struct shape shape_mutation_apply(struct shape shape, struct mutation mutation) {
+    struct shape new_shape;
+    mat4x4_mul(new_shape.matrix, mutation.matrix, shape.matrix);
+    return new_shape;
 }

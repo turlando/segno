@@ -1,71 +1,9 @@
 #include <stdlib.h>
 #include <libguile.h>
-#include <segno.h>
 #include <shader.h>
 #include <shape.h>
 #include <shapes.h>
-
-SCM shape_transform(SCM shape, SCM transform) {
-    // for now just one transformation
-    return transform_apply(shape, transform_combine(transform));
-}
-
-SCM shape_polygon_(SCM n_scm, SCM changes) {
-    int n = scm_to_int(n_scm);
-    // Points
-    float array[2*n];
-
-    int i;
-    float theta;
-    for (i=0; i<n; i++) {
-        theta = i * 2*M_PI / n + M_PI/2;
-
-        array[i*2] = cos(theta);
-        array[i*2 + 1] = sin(theta);
-    }
-    //
-
-    // OpenGL stuff
-    glfwMakeContextCurrent(global_window);  // TODO: take a window as argument
-
-    GLuint vbo_point;
-    GLuint vao_point;
-
-    glGenBuffers(1, &vbo_point);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_point);
-    glBufferData(GL_ARRAY_BUFFER, n*2*sizeof(float), array, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glGenVertexArrays(1, &vao_point);
-    glBindVertexArray(vao_point);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_point);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
-    //
-
-    // Polygon
-    struct shape shape;
-    shape.n = n;
-    shape.vertex_buffer = vbo_point;
-    shape.vertex_array = vao_point;
-
-    mat4x4_identity(shape.matrix);
-
-    shape.fill = false;
-
-    SCM shape_scm = shape_to_scm(shape);
-    SCM change;
-
-    foreach(change, changes) {
-        shape_scm = scm_apply_1(change, shape_scm, SCM_EOL);
-    }
-
-    return shape_scm;
-}
+#include <utils.h>
 
 SCM shape_fill(SCM shape_scm) {
     struct shape shape = scm_to_shape(shape_scm);
@@ -79,7 +17,7 @@ void shape_draw(SCM shape_scm, struct shader_program program) {
         SCM list = shape_scm;
 
         foreach(shape_scm, list) {
-            shape_scm = first(list);
+            shape_scm = scm_car(list);
             shape_draw(shape_scm, program);
         }
 
