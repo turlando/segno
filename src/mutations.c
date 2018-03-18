@@ -1,5 +1,6 @@
-#include <mutation.h>
 #include <linmath.h>
+#include <mutations.h>
+#include <mutation.h>
 
 struct mutation mutation_scale(double ratio) {
     struct mutation mutation;

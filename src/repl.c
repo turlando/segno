@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <libguile.h>
-
 #include <repl.h>
 #include <lang.h>
 

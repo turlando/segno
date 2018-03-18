@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <libguile.h>
-#include <shader.h>
-#include <shape.h>
 #include <shapes.h>
 #include <utils.h>
+#include <shape.h>
+#include <shader.h>
 
 SCM shape_fill(SCM shape_scm) {
     struct shape shape = scm_to_shape(shape_scm);

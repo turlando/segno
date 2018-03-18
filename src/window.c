@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
-
 #include <utils.h>
 #include <window.h>
 #include <shader.h>
 #include <shapes.h>
-#include <segno.h>
+#include <segno.h> // global_window...
 
 static void glfw_init() {
     if (glfwInit() != GLFW_TRUE) {

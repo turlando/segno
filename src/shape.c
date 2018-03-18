@@ -1,10 +1,10 @@
+#include <math.h>
+#include <linmath.h>
+#include <GL/gl3w.h>
 #include <libguile.h>
 #include <shape.h>
-#include <mutation.h>
-#include <math.h>
 #include <utils.h>
-#include <GL/gl3w.h>
-#include <linmath.h>
+#include <mutation.h>
 
 SCM shape_to_scm(struct shape shape) {
     size_t size = sizeof(struct shape);

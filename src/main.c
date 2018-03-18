@@ -3,10 +3,8 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <libguile.h>
-
 #define OPTPARSE_IMPLEMENTATION
 #include <optparse.h>
-
 #include <repl.h>
 #include <window.h>
 

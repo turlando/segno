@@ -1,8 +1,9 @@
 #include <libguile.h>
+#include <lang.h>
+#include <utils.h>
 #include <shape.h>
 #include <mutation.h>
 #include <mutations.h>
-#include <utils.h>
 
 SCM lang_polygon(SCM n_scm) {
     int n = scm_to_int(n_scm);
