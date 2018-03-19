@@ -1,6 +1,5 @@
 #pragma once
 
-#include <libguile.h>
-#include <shader.h>
+#include <shape.h>
 
-void shape_draw(SCM shape, struct shader_program program);
+struct shape shape_polygon(int n);

@@ -1,7 +1,7 @@
 #include <libguile.h>
 #include <lang.h>
 #include <utils.h>
-#include <shape.h>
+#include <shapes.h>
 #include <mutation.h>
 #include <mutations.h>
 

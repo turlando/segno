@@ -15,7 +15,6 @@ struct shape {
     bool fill;
 };
 
-struct shape shape_polygon(int n);
 SCM shape_to_scm(struct shape shape);
 struct shape scm_to_shape(SCM shape_scm);
 struct shape shape_mutation_apply(struct shape shape, struct mutation mutation);
