@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SEGNO_UTILS_H__
+#define __SEGNO_UTILS_H__
 
 #include <libguile.h>
 
@@ -10,3 +11,5 @@
 #define foreach(x, xs) \
     for(; x = scm_is_pair(xs) ? scm_car(xs) : SCM_UNDEFINED, scm_is_pair(xs); \
         xs = scm_cdr(xs))
+
+#endif // __SEGNO_UTILS_H__
