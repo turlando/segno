@@ -6,6 +6,6 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-char *vansprintf(const char *fmt, ...);
+char *vasnprintf(const char *fmt, ...);
 
 #endif // __SEGNO_UTILS_H__
