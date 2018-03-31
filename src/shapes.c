@@ -41,6 +41,7 @@ struct shape shape_polygon(int n) {
     glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
 
     // From now on we don't need the vertices anymore
+    // since they're stored in the graphic card memory
     free(vertices);
 
     // Release the active array buffer
