@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <libguile.h>
+#include <utils.h>
 #include <repl.h>
 #include <lang.h>
 
@@ -16,9 +17,7 @@ static void init_server(int port) {
         "  #:host #f"
         "  #:addr INADDR_LOOPBACK"
         "  #:port %d))";
-    size_t size = snprintf(NULL, 0, fmt, port) + 1;
-    char *form = malloc(size);
-    snprintf(form, size, fmt, port);
+    char *form = vasnprintf(fmt, port);
 
     scm_c_eval_string("(use-modules (system repl server))");
     scm_c_eval_string(form);
