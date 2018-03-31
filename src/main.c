@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
     }
 
     if (opt_failure == true) {
-        fprintf(stderr, "\nError: %s\n", opt_failure_msg);
+        fprintf(stderr, "Error: %s\n\n", opt_failure_msg);
         fprintf(stderr, help_fmt, argv[0]);
         exit(EXIT_FAILURE);
     }
