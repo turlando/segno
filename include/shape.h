@@ -8,8 +8,10 @@
 
 struct shape {
     int n;
+
     GLuint vertex_buffer;
     GLuint vertex_array;
+
     mat4x4 matrix;
 
     bool fill;

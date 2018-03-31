@@ -73,7 +73,5 @@ int main(int argc, char **argv) {
 
     window_loop();
 
-    pthread_join(repl_thread, NULL);
-
     return 0;
 }
