@@ -3,19 +3,21 @@
 #include <GL/gl3w.h>
 #include <shader.h>
 
+/**
+ * @param type   Can either be GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
+ * @param source A string containing the shader source code
+ */
 static GLuint compile(GLenum type, const GLchar *source) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
 
-    GLint param;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &param);
+    GLint status;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
-    if (!param) {
-        GLchar log[4096];
-        glGetShaderInfoLog(shader, sizeof(log), NULL, log);
-        fprintf(stderr, "GL3W: %s: %s\n",
-                type == GL_FRAGMENT_SHADER ? "frag" : "vert", (char *) log);
+    if (status != GL_TRUE) {
+        fprintf(stderr, "Error compiling %s shader",
+                (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
         exit(EXIT_FAILURE);
     }
 
@@ -28,13 +30,11 @@ static GLuint link(GLuint vert, GLuint frag) {
     glAttachShader(program, frag);
     glLinkProgram(program);
 
-    GLint param;
-    glGetProgramiv(program, GL_LINK_STATUS, &param);
+    GLint status;
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
 
-    if (!param) {
-        GLchar log[4096];
-        glGetProgramInfoLog(program, sizeof(log), NULL, log);
-        fprintf(stderr, "GL3W: link: %s\n", (char *) log);
+    if (status != GL_TRUE) {
+        fprintf(stderr, "Error linking shader program");
         exit(EXIT_FAILURE);
     }
 
@@ -43,16 +43,18 @@ static GLuint link(GLuint vert, GLuint frag) {
 
 struct shader_program shader_program_new(const GLchar *vert_shader,
                                          const GLchar *frag_shader) {
-    struct shader_program program;
-
     GLuint vert = compile(GL_VERTEX_SHADER, vert_shader);
     GLuint frag = compile(GL_FRAGMENT_SHADER, frag_shader);
+    GLuint prog = link(vert, frag);
 
-    program.id = link(vert, frag);
+    glDeleteShader(vert);
+    glDetachShader(prog, vert);
 
     glDeleteShader(frag);
-    glDeleteShader(vert);
+    glDetachShader(prog, frag);
 
+    struct shader_program program;
+    program.id = prog;
     program.uniform_matrix = glGetUniformLocation(program.id, "matrix");
 
     return program;
