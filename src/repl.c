@@ -10,7 +10,7 @@ static void init_readline() {
 }
 
 static void init_server(int port) {
-    char fmt[] =
+    const char fmt[] =
         "(run-server"
         " (make-tcp-server-socket"
         "  #:host #f"
@@ -27,22 +27,17 @@ static void init_server(int port) {
 }
 
 void *repl_loop(void *a) {
-    (void) a;
-
-    scm_init_guile();
-    init_readline();
-    lang_init();
-    scm_shell(0, NULL);
-
-    return NULL;
-}
-
-void *repl_server_loop(void *a) {
     struct repl_args *args = (struct repl_args *) a;
 
     scm_init_guile();
     lang_init();
-    init_server(args->repl_server_port);
+
+    if (args->want_server == false) {
+        init_readline();
+        scm_shell(0, NULL);
+    } else {
+        init_server(args->server_port);
+    }
 
     return NULL;
 }
