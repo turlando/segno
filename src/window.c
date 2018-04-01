@@ -14,6 +14,13 @@ static void glfw_init() {
     }
 }
 
+static void gl3w_init() {
+    if (gl3wInit()) {
+        fprintf(stderr, "GL3W: initialization failed\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 static void glfw_window_init() {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -23,17 +30,10 @@ static void glfw_window_init() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
-static void gl3w_init() {
-    if (gl3wInit()) {
-        fprintf(stderr, "GL3W: initialization failed\n");
-        exit(EXIT_FAILURE);
-    }
-}
-
 static GLFWwindow *window_new(int width, int height, const char *title) {
     GLFWwindow *window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (window == NULL) {
-        fprintf(stderr, "GLFW3: window creation failed");
+        fprintf(stderr, "Error creating window");
         exit(EXIT_FAILURE);
     }
     return window;
@@ -50,7 +50,8 @@ static void resize_callback(GLFWwindow* window, int width, int height) {
 }
 
 static void key_callback(GLFWwindow *window,
-                         int key, int scancode, int action, int mods) {
+                         int key, int scancode,
+                         int action, int mods) {
     (void) scancode;
     (void) mods;
 
