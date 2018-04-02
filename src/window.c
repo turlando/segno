@@ -60,8 +60,8 @@ static void key_callback(GLFWwindow *window,
     }
 }
 
-void draw(struct shape shape, struct shader_program shader) {
-    glUseProgram(shader.id);
+void draw(struct shape shape, GLuint program) {
+    glUseProgram(program);
 
     // Cast to GLfloat array
     GLfloat matrix[16];
@@ -71,7 +71,8 @@ void draw(struct shape shape, struct shader_program shader) {
         }
     }
 
-    glUniformMatrix4fv(shader.uniform_matrix, 1, GL_FALSE, matrix);
+    GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
+    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
     glBindVertexArray(shape.vertex_array);
 
     if (shape.fill)
@@ -108,7 +109,7 @@ void window_loop() {
         "    color = vec4(0.9, 0.9, 0.9, 0);\n"
         "}\n";
 
-    struct shader_program shader = shader_program_new(vert_shader, frag_shader);
+    GLuint shader = shader_program_new(vert_shader, frag_shader);
 
     while (glfwWindowShouldClose(window) != GLFW_TRUE) {
         glClearColor(0.1, 0.1, 0.1, 1);
@@ -122,6 +123,6 @@ void window_loop() {
         glfwPollEvents();
     }
 
-    shader_program_free(shader);
+    glDeleteProgram(shader);
     glfwTerminate();
 }

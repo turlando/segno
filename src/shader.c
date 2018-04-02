@@ -41,8 +41,8 @@ static GLuint link(GLuint vert, GLuint frag) {
     return program;
 }
 
-struct shader_program shader_program_new(const GLchar *vert_shader,
-                                         const GLchar *frag_shader) {
+GLuint shader_program_new(const GLchar *vert_shader,
+                          const GLchar *frag_shader) {
     GLuint vert = compile(GL_VERTEX_SHADER, vert_shader);
     GLuint frag = compile(GL_FRAGMENT_SHADER, frag_shader);
     GLuint prog = link(vert, frag);
@@ -53,13 +53,5 @@ struct shader_program shader_program_new(const GLchar *vert_shader,
     glDeleteShader(frag);
     glDetachShader(prog, frag);
 
-    struct shader_program program;
-    program.id = prog;
-    program.uniform_matrix = glGetUniformLocation(program.id, "matrix");
-
-    return program;
-}
-
-void shader_program_free(struct shader_program program) {
-    glDeleteProgram(program.id);
+    return prog;
 }
