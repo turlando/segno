@@ -67,8 +67,8 @@ int main(int argc, char **argv) {
         .server_port = repl_server_port
     };
 
-    pthread_t repl_thread;
     scm_init_guile();
+    pthread_t repl_thread;
     pthread_create(&repl_thread, NULL, repl_loop, &repl_args);
 
     window_loop();
