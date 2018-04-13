@@ -5,6 +5,7 @@
 #include <utils.h>
 #include <window.h>
 #include <shader.h>
+#include <shaders.h>
 #include <shape.h>
 
 static void glfw_init() {
@@ -60,6 +61,15 @@ static void key_callback(GLFWwindow *window,
     }
 }
 
+static GLFWwindow *window_main_new() {
+    GLFWwindow *window = window_new(640, 640, "Segno");
+    glfwMakeContextCurrent(window);
+    glfwSetWindowSizeCallback(window, resize_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSwapInterval(1);  // vsync
+    return window;
+}
+
 void draw(struct shape shape, GLuint program) {
     //TODO: implement transformations
     mat4x4 identity;
@@ -82,30 +92,10 @@ void draw(struct shape shape, GLuint program) {
 void window_loop() {
     glfw_init();
     glfw_window_init();
-
-    GLFWwindow *window = window_new(640, 640, "Segno");
-    glfwMakeContextCurrent(window);
-    glfwSetWindowSizeCallback(window, resize_callback);
-    glfwSetKeyCallback(window, key_callback);
-    glfwSwapInterval(1);  // vsync
-
+    GLFWwindow *window = window_main_new();
     gl3w_init();
 
-    const GLchar vert_shader[] =
-        "#version 330\n"
-        "layout(location = 0) in vec2 point;\n"
-        "uniform mat4 matrix;\n"
-        "void main() {\n"
-        "    gl_Position = matrix * vec4(point, 0.0, 1.0);\n"
-        "}\n";
-    const GLchar frag_shader[] =
-        "#version 330\n"
-        "out vec4 color;\n"
-        "void main() {\n"
-        "    color = vec4(0.9, 0.9, 0.9, 0);\n"
-        "}\n";
-
-    GLuint shader = shader_program_new(vert_shader, frag_shader);
+    GLuint shader = shader_program_new(vertex_shader, fragment_shader);
 
     while (glfwWindowShouldClose(window) != GLFW_TRUE) {
         glClearColor(0.1, 0.1, 0.1, 1);
