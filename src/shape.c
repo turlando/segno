@@ -2,6 +2,7 @@
 #include <libguile.h>
 #include <shape.h>
 #include <polygon.h>
+#include <utils.h>
 
 struct shape polygon_to_shape(struct polygon polygon) {
     // Create a new vertex buffer object
@@ -49,4 +50,23 @@ struct shape polygon_to_shape(struct polygon polygon) {
     };
 
     return shape;
+}
+
+void shape_draw(GLuint program, struct shape shape) {
+    //TODO: implement transformations
+    mat4x4 identity;
+    mat4x4_identity(identity);
+
+    glUseProgram(program);
+    GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
+
+    float *matrix = mat4x4_to_floats_new(identity);
+    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
+    free(matrix);
+
+    glBindVertexArray(shape.vertex_array);
+    glDrawArrays(shape.begin_mode, 0, shape.vertex_count);
+
+    glBindVertexArray(0);
+    glUseProgram(0);
 }

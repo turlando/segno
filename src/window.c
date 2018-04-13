@@ -5,7 +5,6 @@
 #include <utils.h>
 #include <window.h>
 #include <shader.h>
-#include <shaders.h>
 #include <shape.h>
 
 static void glfw_init() {
@@ -70,25 +69,6 @@ static GLFWwindow *window_main_new() {
     return window;
 }
 
-void draw(struct shape shape, GLuint program) {
-    //TODO: implement transformations
-    mat4x4 identity;
-    mat4x4_identity(identity);
-
-    glUseProgram(program);
-    GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
-
-    float *matrix = mat4x4_to_floats_new(identity);
-    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
-    free(matrix);
-
-    glBindVertexArray(shape.vertex_array);
-    glDrawArrays(shape.begin_mode, 0, shape.vertex_count);
-
-    glBindVertexArray(0);
-    glUseProgram(0);
-}
-
 void window_loop() {
     glfw_init();
 
@@ -96,7 +76,8 @@ void window_loop() {
     GLFWwindow *window = window_main_new();
 
     gl3w_init();
-    GLuint shader = shader_program_new(vertex_shader, fragment_shader);
+    GLuint shader = shader_program_new(shape_vertex_shader,
+                                       shape_fragment_shader);
 
     while (glfwWindowShouldClose(window) != GLFW_TRUE) {
         glClearColor(0.1, 0.1, 0.1, 1);
@@ -106,7 +87,7 @@ void window_loop() {
         struct polygon polygon = scm_to_polygon(polygon_scm);
         struct shape shape = polygon_to_shape(polygon);
 
-        draw(shape, shader);
+        shape_draw(shader, shape);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
