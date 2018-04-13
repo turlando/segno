@@ -111,6 +111,7 @@ void window_loop() {
         glfwPollEvents();
     }
 
+    glfwDestroyWindow(window);
     glDeleteProgram(shader);
     glfwTerminate();
 }
