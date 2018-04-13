@@ -91,10 +91,11 @@ void draw(struct shape shape, GLuint program) {
 
 void window_loop() {
     glfw_init();
+
     glfw_window_init();
     GLFWwindow *window = window_main_new();
-    gl3w_init();
 
+    gl3w_init();
     GLuint shader = shader_program_new(vertex_shader, fragment_shader);
 
     while (glfwWindowShouldClose(window) != GLFW_TRUE) {
@@ -111,7 +112,7 @@ void window_loop() {
         glfwPollEvents();
     }
 
-    glfwDestroyWindow(window);
     glDeleteProgram(shader);
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
