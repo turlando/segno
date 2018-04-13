@@ -5,19 +5,15 @@
 #include <libguile.h>
 #include <linmath.h>
 #include <GL/gl3w.h>
+#include <polygon.h>
 
 struct shape {
-    int n;
-
+    GLuint vertex_count;
     GLuint vertex_buffer;
     GLuint vertex_array;
-
-    mat4x4 matrix;
-
-    bool fill;
+    GLuint begin_mode;
 };
 
-SCM shape_to_scm(struct shape shape);
-struct shape scm_to_shape(SCM shape_scm);
+struct shape polygon_to_shape(struct polygon polygon);
 
 #endif // __SEGNO_SHAPE_H__

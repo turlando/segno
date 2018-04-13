@@ -1,17 +1,52 @@
 #include <linmath.h>
 #include <libguile.h>
 #include <shape.h>
+#include <polygon.h>
 
-SCM shape_to_scm(struct shape shape) {
-    size_t size = sizeof(struct shape);
-    struct shape *shape_in_heap = scm_gc_malloc_pointerless(size, "shape");
+struct shape polygon_to_shape(struct polygon polygon) {
+    // Create a new vertex buffer object
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
 
-    memcpy(shape_in_heap, &shape, size);
-    return scm_from_pointer(shape_in_heap, NULL);
-}
+    // Make it the active array buffer
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-struct shape scm_to_shape(SCM shape_scm) {
-    struct shape *shape_ref = scm_to_pointer(shape_scm);
-    struct shape shape = *shape_ref;
+    // Compute the vertices
+    float *vertices = polygon_vertices_new(polygon.sides);
+    size_t vertices_size = polygon_vertices_size(polygon.sides);
+
+    // Copy the vertices data to the active array buffer
+    glBufferData(GL_ARRAY_BUFFER, vertices_size, vertices, GL_STATIC_DRAW);
+
+    // From now on we don't need the vertices anymore
+    // since they're stored in the graphic card memory
+    free(vertices);
+
+    // Create a new vertex array object
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+
+    // Make it the active array object
+    glBindVertexArray(vao);
+
+    // Define how the vertices are packed in memory
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Release the active array buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Release the active array object
+    glBindVertexArray(0);
+
+    GLuint begin_mode = polygon.fill == true ? GL_TRIANGLE_FAN : GL_LINE_LOOP;
+
+    struct shape shape = {
+        .vertex_count = polygon.sides,
+        .vertex_buffer = vbo,
+        .vertex_array = vao,
+        .begin_mode = begin_mode
+    };
+
     return shape;
 }

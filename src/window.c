@@ -61,24 +61,19 @@ static void key_callback(GLFWwindow *window,
 }
 
 void draw(struct shape shape, GLuint program) {
+    //TODO: implement transformations
+    mat4x4 identity;
+    mat4x4_identity(identity);
+
     glUseProgram(program);
-
-    // Cast to GLfloat array
-    GLfloat matrix[16];
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            matrix[i * 4 + j] = shape.matrix[i][j];
-        }
-    }
-
     GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
-    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
-    glBindVertexArray(shape.vertex_array);
 
-    if (shape.fill)
-        glDrawArrays(GL_TRIANGLE_FAN, 0, shape.n);
-    else
-        glDrawArrays(GL_LINE_LOOP, 0, shape.n);
+    float *matrix = mat4x4_to_floats_new(identity);
+    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
+    free(matrix);
+
+    glBindVertexArray(shape.vertex_array);
+    glDrawArrays(shape.begin_mode, 0, shape.vertex_count);
 
     glBindVertexArray(0);
     glUseProgram(0);
@@ -93,16 +88,17 @@ void window_loop() {
     glfwSetWindowSizeCallback(window, resize_callback);
     glfwSetKeyCallback(window, key_callback);
     glfwSwapInterval(1);  // vsync
+
     gl3w_init();
 
-    const GLchar *vert_shader =
+    const GLchar vert_shader[] =
         "#version 330\n"
         "layout(location = 0) in vec2 point;\n"
         "uniform mat4 matrix;\n"
         "void main() {\n"
         "    gl_Position = matrix * vec4(point, 0.0, 1.0);\n"
         "}\n";
-    const GLchar *frag_shader =
+    const GLchar frag_shader[] =
         "#version 330\n"
         "out vec4 color;\n"
         "void main() {\n"
@@ -115,8 +111,10 @@ void window_loop() {
         glClearColor(0.1, 0.1, 0.1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        SCM shape_scm = scm_c_eval_string("(get-root-shape)");
-        struct shape shape = scm_to_shape(shape_scm);
+        SCM polygon_scm = scm_c_eval_string("(get-root-shape)");
+        struct polygon polygon = scm_to_polygon(polygon_scm);
+        struct shape shape = polygon_to_shape(polygon);
+
         draw(shape, shader);
 
         glfwSwapBuffers(window);
