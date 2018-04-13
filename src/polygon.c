@@ -6,10 +6,10 @@
 #include <polygon.h>
 
 struct polygon polygon(int sides, bool fill) {
-    struct polygon polygon;
-    polygon.sides = sides;
-    polygon.fill = fill;
-    mat4x4_identity(polygon.transformation);
+    struct polygon polygon = {
+        .sides = sides,
+        .fill = fill
+    };
     return polygon;
 }
 

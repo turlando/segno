@@ -7,7 +7,6 @@
 struct polygon {
     unsigned int sides;
     bool fill;
-    mat4x4 transformation;
 };
 
 struct polygon polygon(int sides, bool fill);
