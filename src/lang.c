@@ -64,7 +64,7 @@ static void bind_primitives() {
 }
 
 static void bind_draw() {
-    const char bind_draw[] =
+    const char draw[] =
         "(use-modules (ice-9 threads))"
         "(define root-object '(polygon 4 #f))"
         "(define root-mutex  (make-mutex))"
@@ -73,7 +73,7 @@ static void bind_draw() {
         "                            (interaction-environment))))"
         "(define-macro (draw body) (with-mutex root-mutex"
         "                           (set! root-object body)) #t)";
-    scm_c_eval_string(bind_draw);
+    scm_c_eval_string(draw);
 }
 
 void lang_init() {
@@ -87,8 +87,8 @@ SCM lang_get_root_object() {
     return scm_c_eval_string("(get-root-object)");
 }
 
-struct shape lang_object_to_shape(SCM object_scm) {
-    struct polygon polygon = scm_to_polygon(object_scm);
+struct shape lang_polygon_to_shape(SCM polygon_scm) {
+    struct polygon polygon = scm_to_polygon(polygon_scm);
     struct shape shape = polygon_to_shape(polygon);
     return shape;
 }

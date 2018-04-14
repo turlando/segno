@@ -84,7 +84,7 @@ void window_loop() {
         glClearColor(0.1, 0.1, 0.1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        struct shape shape = lang_object_to_shape(lang_get_root_object());
+        struct shape shape = lang_polygon_to_shape(lang_get_root_object());
         shape_draw(shader, shape);
 
         glfwSwapBuffers(window);
