@@ -13,6 +13,7 @@ static SCM polygon_to_scm(struct polygon polygon) {
 }
 
 static struct polygon scm_to_polygon(SCM polygon_scm) {
+    scm_assert_foreign_object_type(lang_polygon_type, polygon_scm);
     struct polygon *polygon_ref = scm_foreign_object_ref(polygon_scm, 0);
     struct polygon polygon = *polygon_ref;
     return polygon;
