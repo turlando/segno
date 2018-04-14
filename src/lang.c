@@ -12,6 +12,10 @@ static void init_polygon_type() {
     lang_polygon_type = scm_make_foreign_object_type(name, slots, NULL);
 }
 
+static bool is_scm_polygon(SCM obj_scm) {
+    return SCM_IS_A_P(obj_scm, lang_polygon_type) ? true : false;
+}
+
 static SCM polygon_to_scm(struct polygon polygon) {
     size_t size = sizeof(struct polygon);
     struct polygon *polygon_ref = scm_gc_malloc_pointerless(size, "polygon");
@@ -42,11 +46,25 @@ static void init_transformation_type() {
     lang_transformation_type = scm_make_foreign_object_type(name, slots, NULL);
 }
 
+static bool is_scm_transformation(SCM obj_scm) {
+    return SCM_IS_A_P(obj_scm, lang_transformation_type) ? true : false;
+}
+
 static SCM transformation_to_scm(struct transformation transformation) {
     size_t size = sizeof(struct transformation);
     struct transformation *transformation_ref = scm_gc_malloc_pointerless(size, "transformation");
     memcpy(transformation_ref, &transformation, size);
     return scm_make_foreign_object_1(lang_transformation_type, transformation_ref);
+}
+
+static SCM scm_transform(SCM polygon_scm, SCM transformation_scm) {
+    if (is_scm_polygon(polygon_scm) == false)
+        return scm_error_scm(polygon_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
+
+    if (is_scm_transformation(transformation_scm) == false)
+        return scm_error_scm(transformation_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
+
+    return scm_cons(polygon_scm, transformation_scm);
 }
 
 static SCM scm_translate_x(SCM value_scm) {
@@ -60,6 +78,7 @@ static SCM scm_translate_x(SCM value_scm) {
 
 static void bind_primitives() {
     scm_c_define_gsubr("polygon",     2, 0, 0, &scm_polygon);
+    scm_c_define_gsubr("transform",   2, 0, 0, &scm_transform);
     scm_c_define_gsubr("translate-x", 1, 0, 0, &scm_translate_x);
 }
 
@@ -87,8 +106,20 @@ SCM lang_get_root_object() {
     return scm_c_eval_string("(get-root-object)");
 }
 
-struct shape lang_polygon_to_shape(SCM polygon_scm) {
-    struct polygon polygon = scm_to_polygon(polygon_scm);
+struct shape lang_object_to_shape(SCM object_scm) {
+    // If it gets out of a (transform ...) form
+    if (scm_is_pair(object_scm) == true) {
+        SCM polygon_scm = scm_car(object_scm);
+        SCM transformation_scm = scm_cdr(object_scm);
+        (void) transformation_scm;
+        printf("To be implemented... coming soon...");
+        struct polygon polygon = scm_to_polygon(polygon_scm);
+        struct shape shape = polygon_to_shape(polygon);
+        return shape;
+    }
+
+    // If it gets out of a (polygon ...) form
+    struct polygon polygon = scm_to_polygon(object_scm);
     struct shape shape = polygon_to_shape(polygon);
     return shape;
 }
