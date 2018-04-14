@@ -84,10 +84,7 @@ void window_loop() {
         glClearColor(0.1, 0.1, 0.1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        SCM polygon_scm = scm_c_eval_string("(get-root-shape)");
-        struct polygon polygon = scm_to_polygon(polygon_scm);
-        struct shape shape = polygon_to_shape(polygon);
-
+        struct shape shape = lang_object_to_shape(lang_get_root_object());
         shape_draw(shader, shape);
 
         glfwSwapBuffers(window);
