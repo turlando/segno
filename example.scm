@@ -1,19 +1,34 @@
+;; Available functions
+;; ===================
+;;
+;; polygon
+;; -------
+;; Syntax: (polygon sides fill?)
+;;     sides  uint  number of sides/vertices the polygon will have
+;;     fill?  bool  when true the inner polygon area will be color filled
+;; Examples: (polygon 3 #t)
+;;           (polygon 4 #f)
+;;
+;; draw
+;; ----
+;; Syntax: (draw poly)
+;;     poly  polygon  a polygon object
+;; Examples: (draw (polygon 3 #t))
+
+
 ;; Working examples
+;; ================
 
 (draw
-  (transform
-    (polygon 6)
-    (scale 1/3)))
+ (polygon 5 #f))
 
 (draw
-  (transform
-    (polygon 6)
-    (rotate 1/5)))
+ (polygon 6 #t))
 
 
-;; Not currently working. Refactoring had its victims.
-;; The core functions are not handling lists properly
-;; anymore which is funny for a lisp language.
+;; Not currently working. Coming back soon.
+;; ========================================
+
 (define >~ transform)
 (define &  list)
 (define >+ combine)
