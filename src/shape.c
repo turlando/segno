@@ -1,5 +1,5 @@
+#include <stdlib.h>
 #include <linmath.h>
-#include <libguile.h>
 #include <shape.h>
 #include <polygon.h>
 #include <utils.h>

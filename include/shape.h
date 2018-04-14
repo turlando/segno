@@ -2,7 +2,6 @@
 #define __SEGNO_SHAPE_H__
 
 #include <stdbool.h>
-#include <libguile.h>
 #include <linmath.h>
 #include <GL/gl3w.h>
 #include <polygon.h>

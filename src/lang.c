@@ -4,6 +4,25 @@
 #include <utils.h>
 #include <polygon.h>
 
+SCM polygon_to_scm(struct polygon polygon) {
+    size_t size = sizeof(struct polygon);
+    struct polygon *polygon_scm = scm_gc_malloc_pointerless(size, "polygon");
+    memcpy(polygon_scm, &polygon, size);
+    return scm_make_foreign_object_1(lang_polygon_type, polygon_scm);
+}
+
+struct polygon scm_to_polygon(SCM polygon_scm) {
+    struct polygon *polygon_ref = scm_foreign_object_ref(polygon_scm, 0);
+    struct polygon polygon = *polygon_ref;
+    return polygon;
+}
+
+static void init_polygon_type() {
+    SCM name = scm_string_to_symbol(scm_from_utf8_string("polygon"));
+    SCM slots = scm_list_1(scm_string_to_symbol(scm_from_utf8_string("data")));
+    lang_polygon_type = scm_make_foreign_object_type(name, slots, NULL);
+}
+
 static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
     int sides = scm_to_int(sides_scm);
     bool fill = scm_to_bool(fill_scm);
@@ -31,6 +50,7 @@ static void bind_draw() {
 }
 
 void lang_init() {
+    init_polygon_type();
     bind_primitives();
     bind_draw();
 }

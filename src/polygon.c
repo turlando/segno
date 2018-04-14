@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <linmath.h>
-#include <libguile.h>
 #include <utils.h>
 #include <polygon.h>
 
@@ -10,19 +9,6 @@ struct polygon polygon(int sides, bool fill) {
         .sides = sides,
         .fill = fill
     };
-    return polygon;
-}
-
-SCM polygon_to_scm(struct polygon polygon) {
-    size_t size = sizeof(struct polygon);
-    struct polygon *polygon_ref = scm_gc_malloc_pointerless(size, "polygon");
-    memcpy(polygon_ref, &polygon, size);
-    return scm_from_pointer(polygon_ref, NULL);
-}
-
-struct polygon scm_to_polygon(SCM polygon_scm) {
-    struct polygon *polygon_ref = scm_to_pointer(polygon_scm);
-    struct polygon polygon = *polygon_ref;
     return polygon;
 }
 

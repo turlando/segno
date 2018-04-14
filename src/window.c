@@ -6,6 +6,7 @@
 #include <window.h>
 #include <shader.h>
 #include <shape.h>
+#include <lang.h>
 
 static void glfw_init() {
     if (glfwInit() != GLFW_TRUE) {

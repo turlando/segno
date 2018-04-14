@@ -10,8 +10,6 @@ struct polygon {
 };
 
 struct polygon polygon(int sides, bool fill);
-SCM polygon_to_scm(struct polygon polygon);
-struct polygon scm_to_polygon(SCM polygon_scm);
 float *polygon_vertices_new(int n);
 size_t polygon_vertices_size(int n);
 
