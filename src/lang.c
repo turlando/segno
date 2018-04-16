@@ -3,32 +3,10 @@
 #include <lang.h>
 #include <utils.h>
 #include <polygon.h>
-#include <shape.h>
+#include <polygon_scm.h>
 #include <transformation.h>
-
-static void init_polygon_type() {
-    SCM name = scm_string_to_symbol(scm_from_utf8_string("polygon"));
-    SCM slots = scm_list_1(scm_string_to_symbol(scm_from_utf8_string("data")));
-    lang_polygon_type = scm_make_foreign_object_type(name, slots, NULL);
-}
-
-static bool is_scm_polygon(SCM obj_scm) {
-    return SCM_IS_A_P(obj_scm, lang_polygon_type) ? true : false;
-}
-
-static SCM polygon_to_scm(struct polygon polygon) {
-    size_t size = sizeof(struct polygon);
-    struct polygon *polygon_ref = scm_gc_malloc_pointerless(size, "polygon");
-    memcpy(polygon_ref, &polygon, size);
-    return scm_make_foreign_object_1(lang_polygon_type, polygon_ref);
-}
-
-static struct polygon scm_to_polygon(SCM polygon_scm) {
-    scm_assert_foreign_object_type(lang_polygon_type, polygon_scm);
-    struct polygon *polygon_ref = scm_foreign_object_ref(polygon_scm, 0);
-    struct polygon polygon = *polygon_ref;
-    return polygon;
-}
+#include <transformation_scm.h>
+#include <shape.h>
 
 static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
     int sides = scm_to_int(sides_scm);
@@ -40,35 +18,11 @@ static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
     return polygon_scm;
 }
 
-static void init_transformation_type() {
-    SCM name = scm_string_to_symbol(scm_from_utf8_string("transformation"));
-    SCM slots = scm_list_1(scm_string_to_symbol(scm_from_utf8_string("data")));
-    lang_transformation_type = scm_make_foreign_object_type(name, slots, NULL);
-}
-
-static bool is_scm_transformation(SCM obj_scm) {
-    return SCM_IS_A_P(obj_scm, lang_transformation_type) ? true : false;
-}
-
-static SCM transformation_to_scm(struct transformation transformation) {
-    size_t size = sizeof(struct transformation);
-    struct transformation *transformation_ref = scm_gc_malloc_pointerless(size, "transformation");
-    memcpy(transformation_ref, &transformation, size);
-    return scm_make_foreign_object_1(lang_transformation_type, transformation_ref);
-}
-
-static struct transformation scm_to_transformation(SCM transformation_scm) {
-    scm_assert_foreign_object_type(lang_transformation_type, transformation_scm);
-    struct transformation *transformation_ref = scm_foreign_object_ref(transformation_scm, 0);
-    struct transformation transformation = *transformation_ref;
-    return transformation;
-}
-
 static SCM scm_transform(SCM polygon_scm, SCM transformation_scm) {
-    if (is_scm_polygon(polygon_scm) == false)
+    if (polygon_scm_is_p(polygon_scm) == false)
         return scm_error_scm(polygon_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
 
-    if (is_scm_transformation(transformation_scm) == false)
+    if (transformation_scm_is_p(transformation_scm) == false)
         return scm_error_scm(transformation_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
 
     return scm_cons(polygon_scm, transformation_scm);
@@ -113,8 +67,8 @@ static void bind_draw() {
 }
 
 void lang_init() {
-    init_polygon_type();
-    init_transformation_type();
+    polygon_scm_t_init();
+    transformation_scm_t_init();
     bind_primitives();
     bind_draw();
 }

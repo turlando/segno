@@ -1,6 +1,8 @@
 #ifndef __SEGNO_TRANSFORMATION_H__
 #define __SEGNO_TRANSFORMATION_H__
 
+#include <linmath.h>
+
 enum transformations {
     TRANSFORMATION_IDENTITY    = 0,
     TRANSFORMATION_TRANSLATE_X = 1,
