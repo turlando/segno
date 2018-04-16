@@ -21,7 +21,7 @@ static mat4x4 *translate_y_new(float value) {
     return mat;
 }
 
-mat4x4 *(*transformations_table[])(float) = {
+static mat4x4 *(*transformations_table[])(float) = {
     &identity_new,    // 0
     &translate_x_new, // 1
     &translate_y_new  // 2
