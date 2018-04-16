@@ -1,7 +1,9 @@
+#include <string.h>
 #include <stdlib.h>
 #include <linmath.h>
 #include <shape.h>
 #include <polygon.h>
+#include <transformation.h>
 #include <utils.h>
 
 struct shape polygon_to_shape(struct polygon polygon) {
@@ -49,18 +51,28 @@ struct shape polygon_to_shape(struct polygon polygon) {
         .begin_mode = begin_mode
     };
 
+    mat4x4_identity(shape.matrix);
+
+    return shape;
+}
+
+struct shape polygon_transformation_to_shape(struct polygon polygon,
+                                             struct transformation transformation) {
+    struct shape shape = polygon_to_shape(polygon);
+    mat4x4 *matrix = transformation_to_mat4x4(transformation);
+
+    size_t size = sizeof(mat4x4);
+    memcpy(shape.matrix, matrix, size);
+
+    free(matrix);
     return shape;
 }
 
 void shape_draw(GLuint program, struct shape shape) {
-    //TODO: implement transformations
-    mat4x4 identity;
-    mat4x4_identity(identity);
-
     glUseProgram(program);
     GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
 
-    float *matrix = mat4x4_to_floats_new(identity);
+    float *matrix = mat4x4_to_floats_new(shape.matrix);
     glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
     free(matrix);
 

@@ -14,5 +14,6 @@ struct transformation {
 
 struct transformation transformation(enum transformations transformation_type,
                                      float value);
+mat4x4 *transformation_to_mat4x4(struct transformation transformation);
 
 #endif // __SEGNO_TRANSFORMATION_H__

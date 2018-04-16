@@ -5,6 +5,7 @@
 #include <linmath.h>
 #include <GL/gl3w.h>
 #include <polygon.h>
+#include <transformation.h>
 
 static const char shape_vertex_shader[] =
     "#version 330\n"
@@ -26,9 +27,12 @@ struct shape {
     GLuint vertex_buffer;
     GLuint vertex_array;
     GLuint begin_mode;
+    mat4x4 matrix;
 };
 
 struct shape polygon_to_shape(struct polygon polygon);
+struct shape polygon_transformation_to_shape(struct polygon polygon,
+                                             struct transformation transformation);
 void shape_draw(GLuint program, struct shape shape);
 
 #endif // __SEGNO_SHAPE_H__

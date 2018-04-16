@@ -6,14 +6,30 @@
 ;; Syntax: (polygon sides fill?)
 ;;     sides  uint  number of sides/vertices the polygon will have
 ;;     fill?  bool  when true the inner polygon area will be color filled
-;; Examples: (polygon 3 #t)
-;;           (polygon 4 #f)
+;; Examples:
+;;    (polygon 3 #t)
+;;    (polygon 4 #f)
+;;
+;; transform
+;; ---------
+;; Syntax: (transform polygon transformation)
+;;     polygon         polygon         polygon object to be transformed
+;;     transformation  transformation  transformation to apply
+;; Description:
+;;     A transformation can be any of:
+;;         - translate-x
+;;         - translate-y
+;;     Each of them take exactly one float argument.
+;; Examples:
+;;     (transform (polygon 3 #t) (translate-x 1/4))
 ;;
 ;; draw
 ;; ----
-;; Syntax: (draw poly)
-;;     poly  polygon  a polygon object
-;; Examples: (draw (polygon 3 #t))
+;; Syntax: (draw object)
+;;     poly  polygon  either a polygon or a transform
+;; Examples:
+;;     (draw (polygon 3 #t))
+;;     (draw (transform (polygon 3 #t) (translate-x 1/4)))
 
 
 ;; Working examples
