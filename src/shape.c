@@ -4,7 +4,6 @@
 #include <shape.h>
 #include <polygon.h>
 #include <transformation.h>
-#include <utils.h>
 
 struct shape polygon_to_shape(struct polygon polygon) {
     // Create a new vertex buffer object
@@ -56,8 +55,8 @@ struct shape polygon_to_shape(struct polygon polygon) {
     return shape;
 }
 
-struct shape polygon_transformation_to_shape(struct polygon polygon,
-                                             struct transformation transformation) {
+struct shape transform_to_shape(struct polygon polygon,
+                                struct transformation transformation) {
     struct shape shape = polygon_to_shape(polygon);
     mat4x4 *matrix = transformation_to_mat4x4(transformation);
 
@@ -66,19 +65,4 @@ struct shape polygon_transformation_to_shape(struct polygon polygon,
 
     free(matrix);
     return shape;
-}
-
-void shape_draw(GLuint program, struct shape shape) {
-    glUseProgram(program);
-    GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
-
-    float *matrix = mat4x4_to_floats_new(shape.matrix);
-    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
-    free(matrix);
-
-    glBindVertexArray(shape.vertex_array);
-    glDrawArrays(shape.begin_mode, 0, shape.vertex_count);
-
-    glBindVertexArray(0);
-    glUseProgram(0);
 }

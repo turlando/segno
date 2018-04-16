@@ -31,8 +31,6 @@ struct shape {
 };
 
 struct shape polygon_to_shape(struct polygon polygon);
-struct shape polygon_transformation_to_shape(struct polygon polygon,
-                                             struct transformation transformation);
-void shape_draw(GLuint program, struct shape shape);
-
+struct shape transform_to_shape(struct polygon polygon,
+                                struct transformation transformation);
 #endif // __SEGNO_SHAPE_H__

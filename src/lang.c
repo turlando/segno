@@ -130,7 +130,7 @@ struct shape lang_object_to_shape(SCM object_scm) {
         SCM transformation_scm = scm_cdr(object_scm);
         struct polygon polygon = scm_to_polygon(polygon_scm);
         struct transformation transformation = scm_to_transformation(transformation_scm);
-        struct shape shape = polygon_transformation_to_shape(polygon, transformation);
+        struct shape shape = transform_to_shape(polygon, transformation);
         return shape;
     }
 

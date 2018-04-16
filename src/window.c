@@ -70,6 +70,21 @@ static GLFWwindow *window_main_new() {
     return window;
 }
 
+void shape_draw(GLuint program, struct shape shape) {
+    glUseProgram(program);
+    GLuint uniform_matrix = glGetUniformLocation(program, "matrix");
+
+    float *matrix = mat4x4_to_floats_new(shape.matrix);
+    glUniformMatrix4fv(uniform_matrix, 1, GL_FALSE, matrix);
+    free(matrix);
+
+    glBindVertexArray(shape.vertex_array);
+    glDrawArrays(shape.begin_mode, 0, shape.vertex_count);
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+}
+
 void window_loop() {
     glfw_init();
 
