@@ -20,10 +20,12 @@ static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
 
 static SCM scm_transform(SCM polygon_scm, SCM transformation_scm) {
     if (polygon_scm_is_p(polygon_scm) == false)
-        return scm_error_scm(polygon_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
+        return scm_error_scm(polygon_scm, SCM_BOOL_F,
+                             NULL, NULL, SCM_BOOL_F);
 
     if (transformation_scm_is_p(transformation_scm) == false)
-        return scm_error_scm(transformation_scm, SCM_BOOL_F, NULL, NULL, SCM_BOOL_F);
+        return scm_error_scm(transformation_scm, SCM_BOOL_F,
+                             NULL, NULL, SCM_BOOL_F);
 
     return scm_cons(polygon_scm, transformation_scm);
 }
@@ -31,7 +33,8 @@ static SCM scm_transform(SCM polygon_scm, SCM transformation_scm) {
 static SCM scm_translate_x(SCM value_scm) {
     float value = (float) scm_to_double(value_scm);
 
-    struct transformation transformation_c = transformation(TRANSFORMATION_TRANSLATE_X, value);
+    struct transformation transformation_c =
+        transformation(TRANSFORMATION_TRANSLATE_X, value);
     SCM transformation_scm = transformation_to_scm(transformation_c);
 
     return transformation_scm;
@@ -40,7 +43,8 @@ static SCM scm_translate_x(SCM value_scm) {
 static SCM scm_translate_y(SCM value_scm) {
     float value = (float) scm_to_double(value_scm);
 
-    struct transformation transformation_c = transformation(TRANSFORMATION_TRANSLATE_Y, value);
+    struct transformation transformation_c =
+        transformation(TRANSFORMATION_TRANSLATE_Y, value);
     SCM transformation_scm = transformation_to_scm(transformation_c);
 
     return transformation_scm;
@@ -83,7 +87,8 @@ struct shape lang_object_to_shape(SCM object_scm) {
         SCM polygon_scm = scm_car(object_scm);
         SCM transformation_scm = scm_cdr(object_scm);
         struct polygon polygon = scm_to_polygon(polygon_scm);
-        struct transformation transformation = scm_to_transformation(transformation_scm);
+        struct transformation transformation =
+            scm_to_transformation(transformation_scm);
         struct shape shape = transform_to_shape(polygon, transformation);
         return shape;
     }

@@ -36,7 +36,7 @@ struct transformation transformation(enum transformations transformation_type,
     return transformation;
 }
 
-mat4x4 *transformation_to_mat4x4(struct transformation transformation) {
-    mat4x4 *mat = transformations_table[transformation.transformation](transformation.value);
+mat4x4 *transformation_to_mat4x4(struct transformation t) {
+    mat4x4 *mat =transformations_table[t.transformation](t.value);
     return mat;
 }
