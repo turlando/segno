@@ -3,7 +3,7 @@
 #include <transformation.h>
 
 void transformation_scm_t_init() {
-    SCM name = scm_string_to_symbol(scm_from_utf8_string("transformation"));
+    SCM name = scm_from_utf8_symbol("transformation");
     SCM slots = scm_list_1(scm_string_to_symbol(scm_from_utf8_string("data")));
     transformation_scm_t = scm_make_foreign_object_type(name, slots, NULL);
 }
