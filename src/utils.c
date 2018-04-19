@@ -18,7 +18,7 @@ char *vasnprintf(const char *fmt, ...) {
     size_t size = vsnprintf(NULL, 0, fmt, args) + 1;
     char *str = malloc(size);
 
-    snprintf(str, size, fmt, args);
+    vsnprintf(str, size, fmt, args);
 
     return str;
 }
