@@ -1,6 +1,5 @@
-#include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <linmath.h>
 #include <shape.h>
 #include <polygon.h>
@@ -57,7 +56,6 @@ static struct shape polygon_to_shape(struct polygon polygon) {
 struct shape shape(struct polygon polygon, struct transformations ts) {
     struct shape shape = polygon_to_shape(polygon);
 
-    printf("shape.vertex_count=%d\n", shape.vertex_count);
     mat4x4 *mat = transformations_to_mat4x4(ts);
     memcpy(shape.matrix, mat, sizeof(mat4x4));
 

@@ -22,10 +22,21 @@ static mat4x4 *translate_y_new(float value) {
     return mat;
 }
 
+static mat4x4 *scale_new(float value) {
+    mat4x4 identity;
+    mat4x4_identity(identity);
+
+    mat4x4 *mat = malloc(sizeof(mat4x4));
+    mat4x4_scale_aniso(*mat, identity, value, value, value);
+
+    return mat;
+}
+
 static mat4x4 *(*transformations_table[])(float) = {
     &identity_new,    // 0
     &translate_x_new, // 1
-    &translate_y_new  // 2
+    &translate_y_new, // 2
+    &scale_new        // 3
 };
 
 struct transformation transformation(enum transformation_type type,

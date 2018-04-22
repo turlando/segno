@@ -32,6 +32,9 @@ static SCM scm_transformation_STAR(SCM name_scm, SCM value_scm) {
     if (strcmp(name, "translate-y") == 0)
         t = transformation(TRANSFORMATION_TRANSLATE_Y, value);
 
+    if (strcmp(name, "scale") == 0)
+        t = transformation(TRANSFORMATION_SCALE, value);
+
     SCM transformation_scm = transformation_to_scm(t);
     return transformation_scm;
 }
@@ -49,8 +52,8 @@ static void bind_draw() {
     const char draw[] =
         "(use-modules (ice-9 threads))"
         "(define root-object '(list (polygon* 3 #t)"
-        "                           (transformation* :translate-x 1/2)"
-        "                           (transformation* :translate-y 1/2)))"
+        "                           (transformation* :scale 1/2)"
+        "                           (transformation* :translate-y -1/8)))"
         "(define root-mutex  (make-mutex))"
         "(define (get-root-object) (with-mutex root-mutex"
         "                           (eval root-object"

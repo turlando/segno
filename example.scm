@@ -22,6 +22,7 @@
 ;;         - :identity
 ;;         - :translate-x
 ;;         - :translate-y
+;;         - :scale
 ;;     You can use both the traditional scheme notation (#:key)
 ;      or the short notation (:key).
 ;; Examples:
@@ -40,12 +41,15 @@
 ;; ================
 
 (draw
- (polygon* 3 #f))
+ (list
+  (polygon* 3 #f)
+  (transformation* :identity 0)))
 
 (draw
- (cons
-  (polygon* 4 #t)
-  (transformation* :translate-x 1/3)))
+ (list
+  (polygon* 3 #t)
+  (transformation* :scale 1/2)
+  (transformation* :translate-y -1/8)))
 
 
 ;; Not currently working. Coming back soon.
