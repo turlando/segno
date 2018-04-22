@@ -1,6 +1,8 @@
-((c-mode . ((indent-tabs-mode . nil)
-            (tab-width . 4)))
- (nil . ((c-file-style . "k&r")
+((nil . ((indent-tabs-mode . nil)
+         (tab-width . 4)
+         (c-basic-offset . 4)
+         (c-basic-indent . 4)
+         (c-file-style . "k&r")
          (flycheck-clang-language-standard . "c99")
          (flychck-clang-include-path ("src"
                                       "include"))
