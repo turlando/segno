@@ -1,6 +1,7 @@
 #include <libguile.h>
 #include <transformation_scm.h>
 #include <transformation.h>
+#include <utils.h>
 
 void transformation_scm_t_init() {
     SCM name = scm_from_utf8_symbol("transformation");
@@ -26,4 +27,22 @@ struct transformation scm_to_transformation(SCM transformation_scm) {
         scm_foreign_object_ref(transformation_scm, 0);
     struct transformation transformation = *transformation_ref;
     return transformation;
+}
+
+struct transformations scm_to_transformations(SCM ts_scm) {
+    SCM count_scm = scm_length(ts_scm);
+    size_t count = scm_to_uint(count_scm);
+
+    struct transformations ts;
+    ts.count = count;
+    ts.ts = malloc(sizeof(struct transformations) * ts.count);
+
+    size_t i = 0;
+    SCM t_scm;
+    FOR_SCM(t_scm, ts_scm) {
+        ts.ts[i] = scm_to_transformation(t_scm);
+        i++;
+    }
+
+    return ts;
 }

@@ -1,11 +1,12 @@
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <linmath.h>
 #include <shape.h>
 #include <polygon.h>
 #include <transformation.h>
 
-struct shape polygon_to_shape(struct polygon polygon) {
+static struct shape polygon_to_shape(struct polygon polygon) {
     // Create a new vertex buffer object
     GLuint vbo;
     glGenBuffers(1, &vbo);
@@ -50,19 +51,15 @@ struct shape polygon_to_shape(struct polygon polygon) {
         .begin_mode = begin_mode
     };
 
-    mat4x4_identity(shape.matrix);
-
     return shape;
 }
 
-struct shape transform_to_shape(struct polygon polygon,
-                                struct transformation transformation) {
+struct shape shape(struct polygon polygon, struct transformations ts) {
     struct shape shape = polygon_to_shape(polygon);
-    mat4x4 *matrix = transformation_to_mat4x4(transformation);
 
-    size_t size = sizeof(mat4x4);
-    memcpy(shape.matrix, matrix, size);
+    printf("shape.vertex_count=%d\n", shape.vertex_count);
+    mat4x4 *mat = transformations_to_mat4x4(ts);
+    memcpy(shape.matrix, mat, sizeof(mat4x4));
 
-    free(matrix);
     return shape;
 }

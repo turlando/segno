@@ -3,19 +3,25 @@
 
 #include <linmath.h>
 
-enum transformations {
+enum transformation_type {
     TRANSFORMATION_IDENTITY    = 0,
     TRANSFORMATION_TRANSLATE_X = 1,
     TRANSFORMATION_TRANSLATE_Y = 2
 };
 
 struct transformation {
-    enum transformations transformation;
+    enum transformation_type transformation;
     float value;
 };
 
-struct transformation transformation(enum transformations transformation_type,
+struct transformations {
+    size_t count;
+    struct transformation *ts;
+};
+
+struct transformation transformation(enum transformation_type transformation_type,
                                      float value);
 mat4x4 *transformation_to_mat4x4(struct transformation transformation);
+mat4x4 *transformations_to_mat4x4(struct transformations ts);
 
 #endif // __SEGNO_TRANSFORMATION_H__

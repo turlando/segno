@@ -48,7 +48,9 @@ static void init_keywords() {
 static void bind_draw() {
     const char draw[] =
         "(use-modules (ice-9 threads))"
-        "(define root-object '(polygon* 4 #f))"
+        "(define root-object '(list (polygon* 3 #t)"
+        "                           (transformation* :translate-x 1/2)"
+        "                           (transformation* :translate-y 1/2)))"
         "(define root-mutex  (make-mutex))"
         "(define (get-root-object) (with-mutex root-mutex"
         "                           (eval root-object"
@@ -71,19 +73,13 @@ SCM lang_get_root_object() {
 }
 
 struct shape lang_object_to_shape(SCM object_scm) {
-    // If it gets out of a (transform ...) form
-    if (scm_is_pair(object_scm) == true) {
-        SCM polygon_scm = scm_car(object_scm);
-        SCM transformation_scm = scm_cdr(object_scm);
-        struct polygon polygon = scm_to_polygon(polygon_scm);
-        struct transformation transformation =
-            scm_to_transformation(transformation_scm);
-        struct shape shape = transform_to_shape(polygon, transformation);
-        return shape;
-    }
+    SCM p_scm = scm_car(object_scm);
+    SCM ts_scm = scm_cdr(object_scm);
 
-    // If it gets out of a (polygon ...) form
-    struct polygon polygon = scm_to_polygon(object_scm);
-    struct shape shape = polygon_to_shape(polygon);
-    return shape;
+    struct polygon p = scm_to_polygon(p_scm);
+    struct transformations ts = scm_to_transformations(ts_scm);
+
+    struct shape s = shape(p, ts);
+
+    return s;
 }

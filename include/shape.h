@@ -30,7 +30,6 @@ struct shape {
     mat4x4 matrix;
 };
 
-struct shape polygon_to_shape(struct polygon polygon);
-struct shape transform_to_shape(struct polygon polygon,
-                                struct transformation transformation);
+struct shape shape(struct polygon polygon, struct transformations ts);
+
 #endif // __SEGNO_SHAPE_H__

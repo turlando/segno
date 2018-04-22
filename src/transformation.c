@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <linmath.h>
 #include <transformation.h>
@@ -27,16 +28,31 @@ static mat4x4 *(*transformations_table[])(float) = {
     &translate_y_new  // 2
 };
 
-struct transformation transformation(enum transformations transformation_type,
+struct transformation transformation(enum transformation_type type,
                                      float value) {
     struct transformation transformation = {
-        .transformation = transformation_type,
+        .transformation = type,
         .value = value
     };
     return transformation;
 }
 
 mat4x4 *transformation_to_mat4x4(struct transformation t) {
-    mat4x4 *mat =transformations_table[t.transformation](t.value);
+    mat4x4 *mat = transformations_table[t.transformation](t.value);
     return mat;
+}
+
+mat4x4 *transformations_to_mat4x4(struct transformations ts) {
+    mat4x4 *out = malloc(sizeof(mat4x4));
+    mat4x4_identity(*out);
+
+    struct transformation t;
+    mat4x4 *m;
+    for (size_t i = 0; i < ts.count; i++) {
+        t = ts.ts[i];
+        m = transformation_to_mat4x4(t);
+        mat4x4_mul(*out, *m, *out);
+    }
+
+    return out;
 }
