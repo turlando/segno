@@ -1,45 +1,51 @@
 ;; Available functions
 ;; ===================
 ;;
-;; polygon
+;; polygon*
 ;; -------
-;; Syntax: (polygon sides fill?)
+;; Returns a polygon object.
+;; Syntax: (polygon* sides fill?)
 ;;     sides  uint  number of sides/vertices the polygon will have
 ;;     fill?  bool  when true the inner polygon area will be color filled
 ;; Examples:
-;;    (polygon 3 #t)
-;;    (polygon 4 #f)
+;;    (polygon* 3 #t)
+;;    (polygon* 4 #f)
 ;;
-;; transform
+;; transformation*
 ;; ---------
-;; Syntax: (transform polygon transformation)
-;;     polygon         polygon         polygon object to be transformed
-;;     transformation  transformation  transformation to apply
+;; Returns a transformation object.
+;; Syntax: (transformation* #:name value)
+;;     name   keyword  transformation name
+;;     value  float    transformation value
 ;; Description:
-;;     A transformation can be any of:
-;;         - translate-x
-;;         - translate-y
-;;     Each of them take exactly one float argument.
+;;     A transformation name can be any of:
+;;         - :identity
+;;         - :translate-x
+;;         - :translate-y
+;;     You can use both the traditional scheme notation (#:key)
+;      or the short notation (:key).
 ;; Examples:
-;;     (transform (polygon 3 #t) (translate-x 1/4))
+;;     (transformation :translate-x 1/2)
+;;     (transformation #:translate-x 1/4)
 ;;
 ;; draw
 ;; ----
 ;; Syntax: (draw object)
-;;     poly  polygon  either a polygon or a transform
 ;; Examples:
 ;;     (draw (polygon 3 #t))
-;;     (draw (transform (polygon 3 #t) (translate-x 1/4)))
+;;     (draw (cons (polygon* 3 #t) (transformation* :translate-x 1/4)))
 
 
 ;; Working examples
 ;; ================
 
 (draw
- (polygon 5 #f))
+ (polygon* 3 #f))
 
 (draw
- (polygon 6 #t))
+ (cons
+  (polygon* 4 #t)
+  (transformation* :translate-x 1/3)))
 
 
 ;; Not currently working. Coming back soon.

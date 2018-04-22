@@ -8,7 +8,7 @@
 #include <transformation_scm.h>
 #include <shape.h>
 
-static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
+static SCM scm_polygon_STAR(SCM sides_scm, SCM fill_scm) {
     int sides = scm_to_int(sides_scm);
     bool fill = scm_to_bool(fill_scm);
 
@@ -18,49 +18,37 @@ static SCM scm_polygon(SCM sides_scm, SCM fill_scm) {
     return polygon_scm;
 }
 
-static SCM scm_transform(SCM polygon_scm, SCM transformation_scm) {
-    if (polygon_scm_is_p(polygon_scm) == false)
-        return scm_error_scm(polygon_scm, SCM_BOOL_F,
-                             NULL, NULL, SCM_BOOL_F);
+static SCM scm_transformation_STAR(SCM name_scm, SCM value_scm) {
+    SCM name_str_scm = scm_symbol_to_string(scm_keyword_to_symbol(name_scm));
+    char *name = scm_to_utf8_stringn(name_str_scm, NULL);
 
-    if (transformation_scm_is_p(transformation_scm) == false)
-        return scm_error_scm(transformation_scm, SCM_BOOL_F,
-                             NULL, NULL, SCM_BOOL_F);
-
-    return scm_cons(polygon_scm, transformation_scm);
-}
-
-static SCM scm_translate_x(SCM value_scm) {
     float value = (float) scm_to_double(value_scm);
 
-    struct transformation transformation_c =
-        transformation(TRANSFORMATION_TRANSLATE_X, value);
-    SCM transformation_scm = transformation_to_scm(transformation_c);
+    struct transformation t = transformation(TRANSFORMATION_IDENTITY, value);
 
-    return transformation_scm;
-}
+    if (strcmp(name, "translate-x") == 0)
+        t = transformation(TRANSFORMATION_TRANSLATE_X, value);
 
-static SCM scm_translate_y(SCM value_scm) {
-    float value = (float) scm_to_double(value_scm);
+    if (strcmp(name, "translate-y") == 0)
+        t = transformation(TRANSFORMATION_TRANSLATE_Y, value);
 
-    struct transformation transformation_c =
-        transformation(TRANSFORMATION_TRANSLATE_Y, value);
-    SCM transformation_scm = transformation_to_scm(transformation_c);
-
+    SCM transformation_scm = transformation_to_scm(t);
     return transformation_scm;
 }
 
 static void bind_primitives() {
-    scm_c_define_gsubr("polygon",     2, 0, 0, &scm_polygon);
-    scm_c_define_gsubr("transform",   2, 0, 0, &scm_transform);
-    scm_c_define_gsubr("translate-x", 1, 0, 0, &scm_translate_x);
-    scm_c_define_gsubr("translate-y", 1, 0, 0, &scm_translate_y);
+    scm_c_define_gsubr("polygon*",        2, 0, 0, &scm_polygon_STAR);
+    scm_c_define_gsubr("transformation*", 2, 0, 0, &scm_transformation_STAR);
+}
+
+static void init_keywords() {
+    scm_c_eval_string("(read-set! keywords 'prefix)");
 }
 
 static void bind_draw() {
     const char draw[] =
         "(use-modules (ice-9 threads))"
-        "(define root-object '(polygon 4 #f))"
+        "(define root-object '(polygon* 4 #f))"
         "(define root-mutex  (make-mutex))"
         "(define (get-root-object) (with-mutex root-mutex"
         "                           (eval root-object"
@@ -71,6 +59,7 @@ static void bind_draw() {
 }
 
 void lang_init() {
+    init_keywords();
     polygon_scm_t_init();
     transformation_scm_t_init();
     bind_primitives();
