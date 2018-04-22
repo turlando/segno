@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <linmath.h>
 #include <transformation.h>
+#include <utils.h>
 
 static mat4x4 *identity_new(float value) {
     (void) value;
@@ -32,11 +33,22 @@ static mat4x4 *scale_new(float value) {
     return mat;
 }
 
+static mat4x4 *rotate_new(float value) {
+    mat4x4 identity;
+    mat4x4_identity(identity);
+
+    mat4x4 *mat = malloc(sizeof(mat4x4));
+    mat4x4_rotate_Z(*mat, identity, value * 2 * M_PI);
+
+    return mat;
+}
+
 static mat4x4 *(*transformations_table[])(float) = {
     &identity_new,    // 0
     &translate_x_new, // 1
     &translate_y_new, // 2
-    &scale_new        // 3
+    &scale_new,       // 3
+    &rotate_new       // 4
 };
 
 struct transformation transformation(enum transformation_type type,

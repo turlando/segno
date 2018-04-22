@@ -7,7 +7,8 @@ enum transformation_type {
     TRANSFORMATION_IDENTITY    = 0,
     TRANSFORMATION_TRANSLATE_X = 1,
     TRANSFORMATION_TRANSLATE_Y = 2,
-    TRANSFORMATION_SCALE       = 3
+    TRANSFORMATION_SCALE       = 3,
+    TRANSFORMATION_ROTATE      = 4
 };
 
 struct transformation {

@@ -23,8 +23,9 @@
 ;;         - :translate-x
 ;;         - :translate-y
 ;;         - :scale
+;;         - :rotate
 ;;     You can use both the traditional scheme notation (#:key)
-;      or the short notation (:key).
+;;     or the short notation (:key).
 ;; Examples:
 ;;     (transformation :translate-x 1/2)
 ;;     (transformation #:translate-x 1/4)
@@ -49,7 +50,7 @@
  (list
   (polygon* 3 #t)
   (transformation* :scale 1/2)
-  (transformation* :translate-y -1/8)))
+  (transformation* :rotate 1/6)))
 
 
 ;; Not currently working. Coming back soon.

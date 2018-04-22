@@ -35,6 +35,9 @@ static SCM scm_transformation_STAR(SCM name_scm, SCM value_scm) {
     if (strcmp(name, "scale") == 0)
         t = transformation(TRANSFORMATION_SCALE, value);
 
+    if (strcmp(name, "rotate") == 0)
+        t = transformation(TRANSFORMATION_ROTATE, value);
+
     SCM transformation_scm = transformation_to_scm(t);
     return transformation_scm;
 }
