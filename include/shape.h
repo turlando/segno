@@ -30,6 +30,11 @@ struct shape {
     mat4x4 matrix;
 };
 
+struct shapes {
+    size_t count;
+    struct shape *shapes;
+};
+
 struct shape shape(struct polygon polygon, struct transformations ts);
 
 #endif // __SEGNO_SHAPE_H__

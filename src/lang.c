@@ -54,9 +54,12 @@ static void init_keywords() {
 static void bind_draw() {
     const char draw[] =
         "(use-modules (ice-9 threads))"
-        "(define root-object '(list (polygon* 3 #t)"
-        "                           (transformation* :scale 1/2)"
-        "                           (transformation* :translate-y -1/8)))"
+        "(define root-object '(list (list (polygon* 3 #t)"
+        "                                 (transformation* :scale 1/4)"
+        "                                 (transformation* :translate-y -1/8))"
+        "                           (list (polygon* 4 #f)"
+        "                                 (transformation* :scale 1/4)"
+        "                                 (transformation* :translate-y 1/8))))"
         "(define root-mutex  (make-mutex))"
         "(define (get-root-object) (with-mutex root-mutex"
         "                           (eval root-object"
@@ -78,14 +81,28 @@ SCM lang_get_root_object() {
     return scm_c_eval_string("(get-root-object)");
 }
 
-struct shape lang_object_to_shape(SCM object_scm) {
-    SCM p_scm = scm_car(object_scm);
-    SCM ts_scm = scm_cdr(object_scm);
+struct shapes lang_object_to_shapes(SCM objects_scm) {
+    SCM count_scm = scm_length(objects_scm);
+    size_t count = scm_to_uint(count_scm);
 
-    struct polygon p = scm_to_polygon(p_scm);
-    struct transformations ts = scm_to_transformations(ts_scm);
+    struct shapes shapes = {
+        .count = count,
+        .shapes = malloc(sizeof(struct shape) * count)
+    };
 
-    struct shape s = shape(p, ts);
+    size_t i = 0;
+    SCM object_scm;
+    FOR_SCM(object_scm, objects_scm) {
+        SCM p_scm = scm_car(object_scm);
+        SCM ts_scm = scm_cdr(object_scm);
 
-    return s;
+        struct polygon p = scm_to_polygon(p_scm);
+        struct transformations ts = scm_to_transformations(ts_scm);
+
+        struct shape s = shape(p, ts);
+        shapes.shapes[i] = s;
+        i++;
+    }
+
+    return shapes;
 }

@@ -99,8 +99,10 @@ void window_loop() {
         glClearColor(0.1, 0.1, 0.1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        struct shape shape = lang_object_to_shape(lang_get_root_object());
-        shape_draw(shader, shape);
+        struct shapes shapes = lang_object_to_shapes(lang_get_root_object());
+
+        for (size_t i = 0; i < shapes.count; i++)
+            shape_draw(shader, shapes.shapes[i]);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

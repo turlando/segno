@@ -32,29 +32,31 @@
 ;;
 ;; draw
 ;; ----
-;; Syntax: (draw object)
+;; Syntax: (draw ...)
 ;; Examples:
-;;     (draw (polygon 3 #t))
-;;     (draw (cons (polygon* 3 #t) (transformation* :translate-x 1/4)))
+;;     (draw
+;;      (list (list (polygon* 3 #t)
+;;                  (transformation* :identity 0))
+;;            (list (polygon 4 #f)
+;;                  (transformation :scale 1/4)
+;;                  (transformation :rotate 1/3))))
 
 
 ;; Working examples
 ;; ================
 
 (draw
- (list
-  (polygon* 3 #f)
-  (transformation* :identity 0)))
-
-(draw
- (list
-  (polygon* 3 #t)
-  (transformation* :scale 1/2)
-  (transformation* :rotate 1/6)))
+ (list (list (polygon* 6 #f)
+             (transformation* :scale 1/2)
+             (transformation* :translate-x 1/2)
+             (transformation* :scale 3/2))
+       (list (polygon* 6 #t)
+             (transformation* :scale 1/3)
+             (transformation* :scale 1/12))))
 
 
-;; Not currently working. Coming back soon.
-;; ========================================
+;; Old examples using the old syntax.
+;; ==================================
 
 (define >~ transform)
 (define &  list)
@@ -63,18 +65,19 @@
 (define (>* n . body)
   (define (aux n tr)
     (if (> n 1)
-      (>+ tr
-          (aux (1- n)
-               tr))
+      '(tr
+        (aux (1- n)
+             tr))
       tr))
-  (aux n (apply >+ body)))
+  (aux n (apply list body)))
 
 
 (define move-x translate-x)
 (define move-y translate-y)
 
 
-(draw (& (>~ (polygon 6)
+
+(draw (list (list (polygon 6)
              (>* 3
                  (scale 1/2)
                  (move-x 1/2)
